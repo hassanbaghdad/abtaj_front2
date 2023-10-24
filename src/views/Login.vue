@@ -8,8 +8,8 @@
         </v-card-title>
         <v-divider/>
         <v-card-text>
-          <v-text-field @keyup.e.enter="login" outlined label="اسم المستخدم" v-model="user.username" :rules="req"/>
-          <v-text-field @keyup.e.enter="login" outlined label="كلمة المرور" v-model="user.password" :rules="req"/>
+          <v-text-field @keyup.13="login" outlined label="اسم المستخدم" v-model="user.username" :rules="req"/>
+          <v-text-field @keyup.13="login" outlined label="كلمة المرور" v-model="user.password" :rules="req"/>
         </v-card-text>
         <v-divider/>
         <v-card-actions>

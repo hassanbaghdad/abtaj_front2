@@ -4,7 +4,7 @@
       <Drawer/>
 
     <v-app-bar app color="primary">
-      <v-btn  icon dark @click="$store.state.drawer = !$store.state.drawer"><v-icon>mdi-menu</v-icon></v-btn>
+      <v-btn v-if="$store.state.user.login"  icon dark @click="$store.state.drawer = !$store.state.drawer"><v-icon>mdi-menu</v-icon></v-btn>
       <v-spacer/>
       <v-btn v-if="!$vuetify.theme.dark"  icon @click="$vuetify.theme.dark=true">
         <v-icon color="white">mdi-moon-waxing-crescent</v-icon>
@@ -40,8 +40,9 @@ export default Vue.extend({
     //
   }),
   created() {
-    this.$store.commit("GET_ITEMS")
-    this.$store.commit("GET_UNITS")
+    this.$store.commit("GET_ITEMS");
+    this.$store.commit("GET_UNITS");
+    this.$store.state.drawer = false;
   }
 });
 </script>

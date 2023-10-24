@@ -6,12 +6,21 @@
         <span class="mr-2">المواد</span>
       </v-card-title>
       <v-divider/>
-      <v-card-title>
+      <v-card-title v-if="$store.state.user.level ==1">
         <v-btn color="orange" fab small @click="$store.state.subjects.forms.add_subject=true"><v-icon color="white">mdi-plus</v-icon></v-btn>
 
       </v-card-title>
       <v-card-title>
-          <v-text-field  v-model="search.name_subject" @keyup="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
+        <v-row justify="center" class="pa-0 ma-0">
+          <v-col cols="12" md="6">
+            <v-text-field  v-model="search.name_subject" @keyup="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
+
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select :items="$store.state.items.items" item-text="name_item" item-value="id"  v-model="search.id_item" @change="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
+
+          </v-col>
+        </v-row>
 
       </v-card-title>
       <v-divider/>
@@ -24,8 +33,8 @@
               <th class="text-center">المادة</th>
               <th class="text-center">الفئة</th>
               <th class="text-center">العدد</th>
-              <th style="width: 50px;" class="text-center">تعديل</th>
-              <th style="width: 50px" class="text-center">حذف</th>
+              <th v-if="$store.state.user.level ==1" style="width: 50px;" class="text-center">تعديل</th>
+              <th v-if="$store.state.user.level ==1" style="width: 50px" class="text-center">حذف</th>
             </tr>
 
 
@@ -36,8 +45,8 @@
             <td class="text-center">{{sub.name_subject}}</td>
             <td class="text-center">{{sub.name_item}}</td>
             <td class="text-center">{{ sub.count }}</td>
-            <td class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
-            <td class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
 
           </tr>
           </tbody>
@@ -78,6 +87,7 @@ export default {
       subjects:this.$store.state.subjects.subjects,
       search:{
         name_subject:'',
+        id_item:'',
       }
     }
   },
@@ -132,6 +142,11 @@ export default {
     {
       var res = this.$store.state.subjects.subjects;
       res = res.filter(item=>item.name_subject.toLowerCase().match(this.search.name_subject.toLowerCase()));
+      if(this.search.id_item != null && this.search.id_item != "" && this.search.id_item != undefined && this.search.id_item > 0)
+      {
+        res = res.filter(item=>item.id_fk_item==this.search.id_item);
+      }
+
 
 
       this.subjects = res;

@@ -32,7 +32,7 @@ color="#3f3736"
             :key="item.title"
             link
             :to="item.to"
-            :disabled="item.level < $store.state.user.level"
+            v-show="item.level >= $store.state.user.level"
           >
             <v-list-item-icon>
               <v-icon dark>{{ item.icon }}</v-icon>
@@ -74,8 +74,9 @@ export default {
   methods:{
     logout(){
       this.$axios.post('api/users/logout').then(res=>{
-        this.$store.commit("logout")
         localStorage.clear();
+        this.$store.state.user.login = false;
+        this.$store.state.drawer = false;
         this.$router.push("/login");
 
       })
