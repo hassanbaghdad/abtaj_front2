@@ -5,7 +5,7 @@
       <span class="mr-2">الوحدات</span>
     </v-card-title>
     <v-divider/>
-    <v-card-title v-if="$store.state.user.level ==1">
+    <v-card-title v-if="$store.state.user.level ==1 || $store.state.user.level ==2">
     <v-btn color="orange" fab small @click="$store.state.units.forms.add_unit=true"><v-icon color="white">mdi-plus</v-icon></v-btn>
 
     </v-card-title>
@@ -21,16 +21,16 @@
           <tr>
             <th style="width: 50px;" class="text-center">ت</th>
             <th class="text-center">عنوان</th>
-            <th v-if="$store.state.user.level ==1" style="width: 50px;" class="text-center">تعديل</th>
-            <th v-if="$store.state.user.level ==1" style="width: 50px" class="text-center">حذف</th>
+            <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px;" class="text-center">تعديل</th>
+            <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px" class="text-center">حذف</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(u,i) in pageOfItems">
             <td class="text-center">{{units.indexOf(u)+1}}</td>
             <td class="text-center">{{u.name_unit}}</td>
-            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="set_to_edit(u)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
-            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="delete_target(u)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="set_to_edit(u)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="delete_target(u)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
           </tr>
           </tbody>
         </template>

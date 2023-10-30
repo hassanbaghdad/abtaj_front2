@@ -45,8 +45,6 @@ export default {
         id_fk_item:'',
         id_fk_unit:'',
         count:'',
-
-
       }
     }
   },
@@ -58,7 +56,7 @@ export default {
       {
         this.$store.state.loading = true;
         this.$axios.post('api/subjects/edit-subject',this.subject).then(res=>{
-          this.$store.commit("GET_SUBJECTS");
+          this.$store.commit("GET_SUBJECTS",0);
           this.$fire({
             title: "نجح",
             text: res.data.msg,
@@ -71,7 +69,6 @@ export default {
           this.subject.id_fk_unit = '';
           this.subject.count = '';
           this.$store.state.subjects.forms.edit_subject = false;
-
         }).catch(err=>{
           this.$fire({
             title: "فشل",

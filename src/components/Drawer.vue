@@ -4,6 +4,7 @@
 
       <v-navigation-drawer
 
+
         app
                            right
 dark
@@ -17,7 +18,11 @@ color="#3f3736"
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title class="white--text">{{$store.state.user.name}}</v-list-item-title>
+            <v-list-item-title class="white--text">
+              {{$store.state.user.name}}
+              <v-btn left icon small @click="logout"><v-icon color="error">mdi-exit-run</v-icon></v-btn>
+
+            </v-list-item-title>
           </v-list-item-content>
 
 
@@ -63,9 +68,10 @@ export default {
     return{
       drawer: null,
       routes: [
-        { title: 'المواد', icon: 'mdi-cube',to:'/subjects',level:2 },
-        { title: 'الفئات', icon: 'mdi-text-box-outline',to:'/items' ,level: 2},
-        { title: 'الوحدات', icon: 'mdi-clipboard-text-outline',to:'/units',level: 2 },
+        { title: 'المواد', icon: 'mdi-cube',to:'/subjects',level:3 },
+        { title: 'الفئات', icon: 'mdi-text-box-outline',to:'/items' ,level: 3},
+        { title: 'الوحدات', icon: 'mdi-clipboard-text-outline',to:'/units',level: 3 },
+        { title: 'تقارير الفئات', icon: 'mdi-chart-bar',to:'/items-reports',level: 3 },
         { title: 'المشرفين', icon: 'mdi-account-group',to:'/users' ,level: 1},
 
       ],

@@ -29,6 +29,11 @@ export default new Vuex.Store({
     },
     items:{
       items:[],
+      items_f:[],
+      reports:[],
+      title_print:'',
+      id_item:null,
+      minimum:'',
       target:[],
       forms:{
         add_item:false,
@@ -75,12 +80,38 @@ export default new Vuex.Store({
         state.loading = false;
       })
     },
-    async GET_SUBJECTS(state){
-      state.subjects.subjects = [];
+    async GET_ITEMS_REPORTS(state,mini){
+      state.items.reports = [];
       state.loading = true;
-      await axios.get('api/subjects/get-subjects').then(res=>{
+      await axios.post('api/items/get-items-reports',{minimum:mini}).then(res=>{
         let _data = res.data;
-        state.subjects.subjects = _data ;
+        state.items.reports = _data ;
+        localStorage.setItem("reports",_data);
+      }).catch(err=>{
+        if(err.response.status ==401)
+        {
+          state.user.login=false;
+          state.loading = false;
+          router.push('/login').catch(error=>{});
+        }
+      }).finally(function() {
+        state.loading = false;
+      })
+    },
+
+    async GET_SUBJECTS(state,scope){
+
+      var path = 'api/subjects/get-subjects';
+      if (scope == 1)
+      {
+        path = 'api/subjects/get-new-subjects'
+      }
+     // state.subjects.subjects = [];
+      state.loading = true;
+      await axios.get(path).then(res=>{
+        var data = res.data;
+        state.subjects.subjects = data ;
+        state.items.items_f = res.data;
       }).catch(err=>{
         if(err.response.status ==401)
         {

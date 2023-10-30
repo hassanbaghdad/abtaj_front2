@@ -9,6 +9,7 @@
     <v-divider/>
     <v-card-text class="pa-4">
       <v-text-field v-model="item.name_item" :rules="req" outlined prepend-inner-icon="mdi-information" label="المادة"/>
+      <v-text-field v-model="item.minimum" :rules="req_no" outlined prepend-inner-icon="mdi-counter" label="الحد الادنى للنفاذ"/>
     </v-card-text>
     <v-divider/>
     <v-card-actions>
@@ -33,8 +34,10 @@ export default {
     return{
       valid:true,
       req:[v=>!!v || 'لايمكن تركه فارغاً'],
+      req_no:[v=>Number(v) || v==0 || 'يجب ادخال رقم'],
       item:{
         name_item:'',
+        minimum:0,
 
       }
     }

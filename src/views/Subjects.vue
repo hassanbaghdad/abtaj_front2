@@ -6,22 +6,43 @@
         <span class="mr-2">المواد</span>
       </v-card-title>
       <v-divider/>
-      <v-card-title v-if="$store.state.user.level ==1">
+      <v-card-title v-if="$store.state.user.level ==1 || $store.state.user.level ==2">
         <v-btn color="orange" fab small @click="$store.state.subjects.forms.add_subject=true"><v-icon color="white">mdi-plus</v-icon></v-btn>
 
       </v-card-title>
+      <v-divider/>
+      <v-card-title>
+        <v-row>
+          <v-col cols="12" md="3" lg="2">
+            <v-btn color="blue" dark block @click="get_subjects_custom(0)">
+              <v-icon>mdi-eye</v-icon>
+              <span class="mr-2">عرض جميع المواد</span>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" md="3" lg="2">
+            <v-btn  color="success" dark block @click="get_subjects_custom(1)">
+              <v-icon>mdi-eye</v-icon>
+              <span class="mr-2">عرض المواد المضافة مؤخراً</span>
+            </v-btn>
+          </v-col>
+
+        </v-row>
+
+
+
+
+
+      </v-card-title>
+      <v-divider/>
       <v-card-title>
         <v-row justify="center" class="pa-0 ma-0">
           <v-col cols="12" md="6">
-            <v-text-field  v-model="search.name_subject" @keyup="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
-
+            <v-text-field label="اسم المادة"  v-model="search.name_subject" @keyup="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
           </v-col>
           <v-col cols="12" md="6">
-            <v-select :items="$store.state.items.items" item-text="name_item" item-value="id"  v-model="search.id_item" @change="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
-
+            <v-select label="الفئة" clearable :items="$store.state.items.items_f" item-text="name_item" item-value="id_fk_item"  v-model="search.id_item" @change="search_subject" prepend-inner-icon="mdi-magnify" outlined dense/>
           </v-col>
         </v-row>
-
       </v-card-title>
       <v-divider/>
       <v-card-text>
@@ -33,20 +54,22 @@
               <th class="text-center">المادة</th>
               <th class="text-center">الفئة</th>
               <th class="text-center">العدد</th>
-              <th v-if="$store.state.user.level ==1" style="width: 50px;" class="text-center">تعديل</th>
-              <th v-if="$store.state.user.level ==1" style="width: 50px" class="text-center">حذف</th>
+              <th class="text-center" v-if="type==1">منذ</th>
+              <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px;" class="text-center">تعديل</th>
+              <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px" class="text-center">حذف</th>
             </tr>
 
 
             </thead>
           <tbody>
-          <tr v-for="(sub,i) in pageOfItems" :key="'item_i_'+i">
+          <tr v-for="(sub,i) in pageOfItems" :key="'item_i___'+i">
             <td class="text-center">{{subjects.indexOf(sub)+1}}</td>
             <td class="text-center">{{sub.name_subject}}</td>
             <td class="text-center">{{sub.name_item}}</td>
-            <td class="text-center">{{ sub.count }}</td>
-            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
-            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
+            <td class="text-center">{{ sub.count }} {{sub.name_unit}}</td>
+            <td class="text-center" v-if="type==1">{{sub.days}} يوم</td>
+            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
 
           </tr>
           </tbody>
@@ -55,14 +78,16 @@
       </v-card-text>
       <v-divider/>
      <v-card-text>
-       <div class="mypag" v-if="!$vuetify.theme.dark" style="text-align: center; justify-content: center;justify-self: center;width: 100%">
+       <div class="mypag" style="text-align: center; justify-content: center;justify-self: center;width: 100%">
          <jw-pagination :items="subjects" :pageSize="10" :labels="defaultLabels" @changePage="onChangePage"></jw-pagination>
        </div>
        <div class="mypagdark" v-if="$vuetify.theme.dark" style="text-align: center; justify-content: center;justify-self: center;width: 100%">
          <jw-pagination :items="subjects" :pageSize="10" :labels="defaultLabels" @changePage="onChangePage"></jw-pagination>
        </div>
+
      </v-card-text>
-    <AddSubject/>
+
+  <AddSubject/>
       <EditSubject/>
     </v-card>
   </div>
@@ -71,6 +96,7 @@
 import JwPagination from 'jw-vue-pagination';
 import AddSubject from "@/components/Subjects/AddSubject.vue";
 import EditSubject from "@/components/Subjects/EditSubject.vue";
+
 const defaultLabels = {
   first: '>>',
   last: '<<',
@@ -83,7 +109,9 @@ export default {
     return{
       loading:false,
       defaultLabels,
+      items_f:[],
       pageOfItems: [],
+      type:2,
       subjects:this.$store.state.subjects.subjects,
       search:{
         name_subject:'',
@@ -92,19 +120,33 @@ export default {
     }
   },
   components:{
-    JwPagination,
+    EditSubject,
     AddSubject,
-    EditSubject
+    JwPagination,
   },
   methods:{
     onChangePage(pageOfItems) {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
+    get_subjects_custom(num)
+    {
+      if(num ==0)
+      {
+        this.$store.commit("GET_SUBJECTS",0);
+        this.type = 0;
+      }
+      if(num ==1)
+      {
+        this.$store.commit("GET_SUBJECTS",1);
+        this.type = 1;
+      }
+
+    },
     get_subjects()
     {
       this.loading = true;
-      axios.get('api/get-subjects').then(res=>{
+      axios.get('api/subjects/get-subjects').then(res=>{
         var data = res.data;
         var filtered = data.filter(x=>{
           if(x.name_subject =="" || x.name_subject ==null || x.name_subject ==undefined)
@@ -131,7 +173,48 @@ export default {
           return x;
         });
 
-        this.$store.state.subjects = filtered;
+
+       this.$store.state.subjects.subjects = filtered;
+       this.subjects = filtered;
+       this.subjects = filtered;
+      }).catch(err=>{
+        console.log(err)
+      }).finally(fin=>{
+        this.loading = false;
+      })
+    },
+    get_new_subjects()
+    {
+      this.loading = true;
+      axios.get('api/subjects/get-new-subjects').then(res=>{
+        var data = res.data;
+        var filtered = data.filter(x=>{
+          if(x.name_subject =="" || x.name_subject ==null || x.name_subject ==undefined)
+          {
+            x.name_subject ="";
+          }
+          if(x.name_item =="" || x.name_item ==null || x.name_item ==undefined)
+          {
+            x.name_item ="";
+          }
+          if(x.name_unit =="" || x.name_unit ==null || x.name_unit ==undefined)
+          {
+            x.name_unit ="";
+          }
+          if(x.count =="" || x.count ==null || x.count ==undefined)
+          {
+            x.count ="";
+          }
+          if(x.count !="" || x.count !=null || x.count !=undefined)
+          {
+            x.mycount =  x.count + ' ' + x.name_unit;
+          }
+
+          return x;
+        });
+
+        this.$store.state.subjects.subjects = filtered;
+        this.subjects = filtered;
       }).catch(err=>{
         console.log(err)
       }).finally(fin=>{
@@ -148,7 +231,6 @@ export default {
       }
 
 
-
       this.subjects = res;
     },
     set_to_edit(target)
@@ -163,7 +245,7 @@ export default {
       this.$confirm("هل انت متأكد من الحذف ؟").then(() => {
         this.$store.state.loading = true;
         this.$axios.post('api/subjects/delete-subject',target).then(res=>{
-          this.$store.commit("GET_SUBJECTS");
+          this.$store.commit("GET_SUBJECTS",0);
           this.$fire({
             title: "نجح",
             text: res.data.msg,
@@ -186,19 +268,21 @@ export default {
     }
   },
   created() {
-    this.$store.commit("GET_SUBJECTS")
+   // this.$store.state.subjects.subjects = [];
+   // this.subjects = [];
+   this.$store.commit("GET_SUBJECTS",0);
+    //this.get_subjects();
   },
   computed:{
-    get_subjects2() {
+    get_subjects2(){
       return this.$store.state.subjects.subjects;
     }
   },
   watch:{
-    get_subjects2(new_subjects) {
+    get_subjects2(new_subjects){
       this.subjects = new_subjects;
     }
   },
-
 };
 </script>
 

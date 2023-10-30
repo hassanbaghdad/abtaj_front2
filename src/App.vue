@@ -1,9 +1,9 @@
 <template>
-  <v-app>
+  <v-app >
 
       <Drawer/>
 
-    <v-app-bar app color="primary">
+    <v-app-bar app color="primary" class="d-print-none">
       <v-btn v-if="$store.state.user.login"  icon dark @click="$store.state.drawer = !$store.state.drawer"><v-icon>mdi-menu</v-icon></v-btn>
       <v-spacer/>
       <v-btn v-if="!$vuetify.theme.dark"  icon @click="$vuetify.theme.dark=true">
@@ -40,9 +40,10 @@ export default Vue.extend({
     //
   }),
   created() {
+
+    this.$store.state.drawer = false;
     this.$store.commit("GET_ITEMS");
     this.$store.commit("GET_UNITS");
-    this.$store.state.drawer = false;
   }
 });
 </script>

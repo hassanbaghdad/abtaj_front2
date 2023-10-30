@@ -80,6 +80,10 @@ export default {
       {
         return "مشرف";
       }
+      if(value==3)
+      {
+        return "مشاهد";
+      }
 
 
     }

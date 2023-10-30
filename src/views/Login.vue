@@ -50,9 +50,10 @@ export default {
           this.$store.state.user.level = res.data.level;
           this.$store.state.user.token = res.data.token;
           this.$store.state.user.login = true;
-          this.$store.state.drawer = true;
           localStorage.setItem("token",res.data.token);
           axios.defaults.headers.common['Authorization'] = "Bearer "+localStorage.getItem("token");
+          this.$store.commit("GET_ITEMS");
+          this.$store.commit("GET_UNITS");
           this.$router.push("/subjects");
         }).catch(err=>{
           this.$fire({

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import subjects from "@/views/Subjects.vue";
+
 
 export default {
   name: "AddSubject",
@@ -51,16 +51,13 @@ export default {
     }
   },
   methods:{
-    subjects() {
-      return subjects
-    },
     add_subject()
     {
       if(this.$refs.form.validate())
       {
         this.$store.state.loading = true;
         this.$axios.post('api/subjects/add-subject',this.subject).then(res=>{
-          this.$store.commit("GET_SUBJECTS");
+          this.$store.commit("GET_SUBJECTS",0);
           this.$fire({
             title: "نجح",
             text: res.data.msg,

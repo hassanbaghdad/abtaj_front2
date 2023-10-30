@@ -9,6 +9,8 @@ Vue.config.productionTip = false;
 import VueSimpleAlert from "vue-simple-alert";
 
 Vue.use(VueSimpleAlert);
+
+
 new Vue({
   router,
   store,

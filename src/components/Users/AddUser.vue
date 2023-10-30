@@ -46,6 +46,7 @@ export default {
       levels:[
         {label:'مدير',value:1},
         {label:'مشرف',value:2},
+        {label:'مشاهد',value:3},
       ]
     }
   },
