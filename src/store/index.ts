@@ -25,7 +25,10 @@ export default new Vuex.Store({
         add_subject:false,
         edit_subject:false,
         delete_subject:false,
-      }
+        view_list_items:false,
+      },
+      list_target:[],
+      list_items:[]
     },
     items:{
       items:[],
@@ -48,6 +51,14 @@ export default new Vuex.Store({
         add_unit:false,
         edit_unit:false,
         delete_unit:false,
+      }
+    },
+    bills:{
+      bills:[],
+      forms:{
+        add_bill:false,
+        edit_bill:false,
+        delete:false
       }
     },
     users:{
@@ -86,6 +97,7 @@ export default new Vuex.Store({
       await axios.post('api/items/get-items-reports',{minimum:mini}).then(res=>{
         let _data = res.data;
         state.items.reports = _data ;
+        state.items.items_f = res.data;
         localStorage.setItem("reports",_data);
       }).catch(err=>{
         if(err.response.status ==401)
@@ -106,7 +118,8 @@ export default new Vuex.Store({
       {
         path = 'api/subjects/get-new-subjects'
       }
-     // state.subjects.subjects = [];
+
+      // state.subjects.subjects = [];
       state.loading = true;
       await axios.get(path).then(res=>{
         var data = res.data;

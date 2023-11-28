@@ -2,15 +2,14 @@
   <div>
     <v-card class="ma-4" :loading="loading">
       <v-card-title>
-        <v-icon color="blue">mdi-cube</v-icon>
-        <span class="mr-2">جميع المواد</span>
+        <v-icon>mdi-cube</v-icon>
+        <span class="mr-2">المواد المضافة مؤخراً</span>
       </v-card-title>
       <v-divider/>
       <v-card-title v-if="$store.state.user.level ==1 || $store.state.user.level ==2">
         <v-btn color="orange" fab small @click="$store.state.subjects.forms.add_subject=true"><v-icon color="white">mdi-plus</v-icon></v-btn>
 
       </v-card-title>
-
       <v-divider/>
       <v-card-title>
         <v-row justify="center" class="pa-0 ma-0">
@@ -32,6 +31,7 @@
               <th class="text-center">المادة</th>
               <th class="text-center">الفئة</th>
               <th class="text-center">العدد</th>
+              <th class="text-center">منذ</th>
               <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px;" class="text-center">تعديل</th>
               <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px" class="text-center">حذف</th>
             </tr>
@@ -44,6 +44,7 @@
             <td class="text-center">{{sub.name_subject}}</td>
             <td class="text-center">{{sub.name_item}}</td>
             <td class="text-center">{{ sub.count }} {{sub.name_unit}}</td>
+            <td class="text-center">{{sub.days}} يوم</td>
             <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
             <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
 
@@ -105,6 +106,21 @@ export default {
       // update page of items
       this.pageOfItems = pageOfItems;
     },
+    get_subjects_custom(num)
+    {
+      if(num ==0)
+      {
+        this.$store.commit("GET_SUBJECTS",0);
+        this.type = 0;
+      }
+      if(num ==1)
+      {
+        this.$store.commit("GET_SUBJECTS",1);
+        this.type = 1;
+      }
+
+    },
+
     search_subject()
     {
       var res = this.$store.state.subjects.subjects;
@@ -154,7 +170,7 @@ export default {
   created() {
    // this.$store.state.subjects.subjects = [];
    // this.subjects = [];
-   this.$store.commit("GET_SUBJECTS",0);
+   this.$store.commit("GET_SUBJECTS",1);
     //this.get_subjects();
   },
   computed:{

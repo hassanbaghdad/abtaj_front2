@@ -7,8 +7,16 @@ import Subjects from "@/views/Subjects.vue";
 import Subjects2 from "@/views/Subjects2.vue";
 import Users from "@/views/Users.vue";
 import Login from "@/views/Login.vue";
-import ItemsReports from "@/components/Items/ItemsReports.vue";
+import ItemsReports from "@/components/Items/ExpiredItemsReports.vue";
 import PrintItemsReport from "@/components/Items/PrintItemsReport.vue";
+import LatestSubjects from "@/views/LatestSubjects.vue";
+import ExpiredItemsReports from "@/components/Items/ExpiredItemsReports.vue";
+import ExpiredSoonItemsReports from "@/components/Items/ExpiredSoonItemsReports.vue";
+import Bills from "@/views/Bills.vue";
+import AddBill from "@/components/Bills/AddBill.vue";
+import MyBills from "@/components/Bills/MyLists.vue";
+import MyLists from "@/components/Bills/MyLists.vue";
+import RequestedLists from "@/components/Bills/RequestedLists.vue";
 
 
 Vue.use(VueRouter);
@@ -20,9 +28,14 @@ const routes: Array<RouteConfig> = [
     component: Items,
   },
   {
-    path: "/items-reports",
-    name: "ItemsReports",
-    component: ItemsReports,
+    path: "/expired-items-reports",
+    name: "ExpiredItemsReports",
+    component: ExpiredItemsReports,
+  },
+  {
+    path: "/expired-soon-items-reports",
+    name: "ExpiredSoonItemsReports",
+    component: ExpiredSoonItemsReports,
   },
   {
     path: "/print-items-report",
@@ -39,6 +52,11 @@ const routes: Array<RouteConfig> = [
     name: "Subjects",
     component: Subjects,
   },
+  {
+    path: "/latest-subjects",
+    name: "LatestSubjects",
+    component: LatestSubjects,
+  },
 
   {
     path: "/users",
@@ -53,8 +71,24 @@ const routes: Array<RouteConfig> = [
 
   {
     path: "/",
-    name: "Subjects",
+    name: "SubjectsHome",
     component: Subjects,
+  },
+
+  {
+    path: "/bills/add-bill",
+    name: "AddBill",
+    component: AddBill,
+  },
+  {
+    path: "/bills/mylists",
+    name: "MyLists",
+    component: MyLists,
+  },
+  {
+    path: "/bills/requests",
+    name: "RequestedLists",
+    component: RequestedLists,
   },
 
 ];

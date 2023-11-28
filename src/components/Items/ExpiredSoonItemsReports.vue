@@ -2,42 +2,22 @@
   <div>
     <v-card class="ma-4" :loading="loading">
       <v-card-title>
-        <v-icon>mdi-cube</v-icon>
-        <span class="mr-2">تقارير الفئات</span>
-      </v-card-title>
-      <v-divider/>
-      <v-card-title>
-        <v-row justify="center" class="pa-0 ma-0">
-          <v-col cols="12" md="4" lg="2">
-            <v-btn color="warning" @click="get_report(1)">
-              <v-icon>mdi-clock-outline</v-icon>
-              <span class="mr-2">مواد على وشك النفاذ</span>
-            </v-btn>
+        <v-row>
+          <v-col cols="12" md="3" lg="2">
+            <v-icon color="pink">mdi-chart-bar</v-icon>
+            <span class="mr-2">مواد على وشك الانتهاء</span>
           </v-col>
-          <v-col cols="12" md="4" lg="2" >
-            <v-btn color="error" @click="get_report(0)">
-              <v-icon>mdi-alert-outline</v-icon>
-              <span class="mr-2">المواد المنتهية</span>
-            </v-btn>
-          </v-col>
-          <v-col cols="12" md="4" lg="2">
-            <v-btn @click="print()"  color="blue" dark>
+          <v-col cols="12" md="3" lg="2">
+            <v-btn color="blue" dark @click="print">
               <v-icon>mdi-printer</v-icon>
               <span class="mr-2">طباعة</span>
             </v-btn>
           </v-col>
-
         </v-row>
 
       </v-card-title>
-      <v-divider v-if="subjects.length>0"/>
+      <v-divider/>
 
-      <v-card-title v-if="subjects.length>0">
-        <span class="mr-2" v-if="minimum==0">المواد المنتهية</span>
-        <span class="mr-2" v-if="minimum==1">مواد على وشك النفاذ</span>
-      </v-card-title>
-
-        <v-divider/>
       <v-card-title>
         <v-row justify="center" class="pa-0 ma-0">
           <v-col cols="12" md="6">
@@ -45,7 +25,7 @@
 
           </v-col>
           <v-col cols="12" md="6">
-            <v-select clearable label="الفئة" :items="items_f" item-text="name_item" item-value="id_fk_item"  v-model="search.id_item" @change="search_subject2" prepend-inner-icon="mdi-magnify" outlined dense/>
+            <v-select clearable label="الفئة" :items="$store.state.items.items_f" item-text="name_item" item-value="id_fk_item"  v-model="search.id_item" @change="search_subject2" prepend-inner-icon="mdi-magnify" outlined dense/>
 
           </v-col>
         </v-row>
@@ -219,7 +199,8 @@ export default {
 
   },
   created() {
-   // this.$store.commit("GET_ITEMS_REPORTS")
+    this.minimum =1;
+    this.$store.commit("GET_ITEMS_REPORTS",1)
 
     this.subjects =[];
   //  this.$store.commit("GET_ITEMS_REPORTS",0);
@@ -231,12 +212,19 @@ export default {
   computed:{
     get_subjects2() {
       return this.$store.state.items.reports;
-    }
+    },
+    get_items_f() {
+      return this.$store.state.items.items_f;
+    },
+
   },
   watch:{
     get_subjects2(new_reports) {
       this.subjects = new_reports;
-    }
+    },
+    get_items_f(new_items_f) {
+      this.items_f = new_items_f
+    },
   },
 
 };

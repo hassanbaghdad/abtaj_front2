@@ -1,7 +1,7 @@
 <template>
   <v-card class="ma-4" :loading="$store.state.loading">
     <v-card-title>
-      <v-icon>mdi-text-box-outline</v-icon>
+      <v-icon color="blue">mdi-text-box-outline</v-icon>
       <span class="mr-2">الوحدات</span>
     </v-card-title>
     <v-divider/>

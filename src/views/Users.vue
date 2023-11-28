@@ -1,7 +1,7 @@
 <template>
   <v-card class="ma-4" :loading="$store.state.loading">
     <v-card-title>
-      <v-icon>mdi-lock</v-icon>
+      <v-icon color="error">mdi-lock</v-icon>
       <span class="mr-2">المشرفين</span>
     </v-card-title>
     <v-divider/>
