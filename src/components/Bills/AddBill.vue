@@ -10,6 +10,11 @@
           </v-card-title>
           <v-divider />
           <v-card-title>
+            <v-select clearable  v-model="branche_id_fk" :items="$store.state.branches.branches" item-text="title"
+                      item-value="id" label="تحديد المستلم" outlined />
+          </v-card-title>
+          <v-divider />
+          <v-card-title>
             <v-select clearable @change="search_sub" v-model="search.id_fk_item" :items="items_ff" item-text="name_item"
                       item-value="id_fk_item" label="تحديد فئة" outlined />
           </v-card-title>
@@ -157,6 +162,7 @@ export default {
         id_fk_item: 0,
         name_subject: ""
       },
+      branche_id_fk:null,
       loading:false,
       count_validator: [v => v > -1 && !isNaN(v) || "عفوا العدد غير صالح"]
     };
@@ -166,6 +172,7 @@ add_list()
 {
   this.primay_list.count_items = this.list_subjects.length;
   this.loading = true;
+  this.primay_list.branche_id_fk = this.branche_id_fk;
   this.$axios.post('/api/lists/add-list',{list:this.primay_list,items:this.list_subjects}).then(res=>{
 
     this.$fire({

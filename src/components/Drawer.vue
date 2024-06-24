@@ -31,22 +31,96 @@ color="#3f3736"
         <v-divider></v-divider>
 
         <v-list dense>
-          <v-list-item
-            co
-            v-for="item in routes"
-            :key="item.title"
-            link
-            :to="item.to"
-            v-show="item.level >= $store.state.user.level"
-          >
+          <v-list-item link to="/subjects">
             <v-list-item-icon>
-              <v-icon :color="item.color" dark>{{ item.icon }}</v-icon>
+              <v-icon color="blue" dark>mdi-cube</v-icon>
             </v-list-item-icon>
-
             <v-list-item-content>
-              <v-list-item-title class="white--text">{{ item.title }}</v-list-item-title>
+              <v-list-item-title class="white--text">جميع المواد</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/latest-subjects">
+            <v-list-item-icon>
+              <v-icon color="success" dark>mdi-cube</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">المواد المضافة مؤخراً</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/expired-items-reports">
+            <v-list-item-icon>
+              <v-icon color="grey" dark>mdi-chart-bar</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">المواد المنتهية</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/expired-soon-items-reports">
+            <v-list-item-icon>
+              <v-icon color="pink" dark>mdi-chart-bar</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">مواد على وشك الانتهاء</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/bills/add-bill" v-if="$store.state.user.level == 2">
+            <v-list-item-icon>
+              <v-icon color="white" dark>mdi-store</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">سحب من المخزن</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider  v-if="$store.state.user.level == 2"/>
+          <v-list-item link to="/bills/mylists" v-if="$store.state.user.level == 2">
+            <v-list-item-icon>
+              <v-icon color="red" dark>mdi-file-document-plus</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">طلباتي للمواد</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider  v-if="$store.state.user.level == 2"/>
+          <v-list-item link to="/bills/requests" v-if="$store.state.user.level == 4">
+            <v-list-item-icon>
+              <v-icon color="orange" dark>mdi-email</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">طلبات السحب</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider  v-if="$store.state.user.level == 4"/>
+          <v-list-item link to="/items">
+            <v-list-item-icon>
+              <v-icon color="orange" dark>mdi-text-box-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">الفئات</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/units">
+            <v-list-item-icon>
+              <v-icon color="blue" dark>mdi-clipboard-text-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">الوحدات</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider/>
+          <v-list-item link to="/users" v-if="$store.state.user.level == 1">
+            <v-list-item-icon>
+              <v-icon color="error" dark>mdi-account-group</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title class="white--text">المشرفين</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
         </v-list>
         <template v-slot:append>
           <div class="pa-2">

@@ -84,6 +84,10 @@ export default {
       {
         return "مشاهد";
       }
+      if(value==4)
+      {
+        return "مجهز";
+      }
 
 
     }

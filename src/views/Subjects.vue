@@ -2,11 +2,21 @@
   <div>
     <v-card class="ma-4" :loading="loading">
       <v-card-title>
-        <v-icon color="blue">mdi-cube</v-icon>
-        <span class="mr-2">جميع المواد</span>
+        <v-row>
+          <v-col cols="12" md="3" lg="2">
+            <v-icon color="grey">mdi-cubic</v-icon>
+            <span class="mr-2">جميع المواد</span>
+          </v-col>
+          <v-col cols="12" md="3" lg="2">
+            <v-btn color="blue" dark @click="print" v-if="$store.state.user.level ==1 || $store.state.user.level ==2">
+              <v-icon>mdi-printer</v-icon>
+              <span class="mr-2">طباعة</span>
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-title>
       <v-divider/>
-      <v-card-title v-if="$store.state.user.level ==1 || $store.state.user.level ==2">
+      <v-card-title v-if="$store.state.user.level ==1">
         <v-btn color="orange" fab small @click="$store.state.subjects.forms.add_subject=true"><v-icon color="white">mdi-plus</v-icon></v-btn>
 
       </v-card-title>
@@ -32,20 +42,22 @@
               <th class="text-center">المادة</th>
               <th class="text-center">الفئة</th>
               <th class="text-center">العدد</th>
-              <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px;" class="text-center">تعديل</th>
-              <th v-if="$store.state.user.level ==1 || $store.state.user.level ==2" style="width: 50px" class="text-center">حذف</th>
+              <th style="width: 50px;" class="text-center">الصورة</th>
+              <th v-if="$store.state.user.level ==1" style="width: 50px;" class="text-center">تعديل</th>
+              <th v-if="$store.state.user.level ==1" style="width: 50px" class="text-center">حذف</th>
             </tr>
 
 
             </thead>
           <tbody>
-          <tr v-for="(sub,i) in pageOfItems" :key="'item_i___'+i">
+          <tr v-for="(sub,i) in pageOfItems" :key="sub.name_subject">
             <td class="text-center">{{subjects.indexOf(sub)+1}}</td>
             <td class="text-center">{{sub.name_subject}}</td>
             <td class="text-center">{{sub.name_item}}</td>
             <td class="text-center">{{ sub.count }} {{sub.name_unit}}</td>
-            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
-            <td v-if="$store.state.user.level ==1 || $store.state.user.level ==2" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
+            <td class="text-center"><v-btn @click="set_to_view_image(sub)" icon><v-icon color="orange">mdi-image</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="set_to_edit(sub)" icon><v-icon color="blue">mdi-pencil</v-icon></v-btn></td>
+            <td v-if="$store.state.user.level ==1" class="text-center"><v-btn @click="delete_target(sub)" icon><v-icon color="error">mdi-delete</v-icon></v-btn></td>
 
           </tr>
           </tbody>
@@ -62,7 +74,7 @@
        </div>
 
      </v-card-text>
-
+<ViewImage/>
   <AddSubject/>
       <EditSubject/>
     </v-card>
@@ -72,6 +84,8 @@
 import JwPagination from 'jw-vue-pagination';
 import AddSubject from "@/components/Subjects/AddSubject.vue";
 import EditSubject from "@/components/Subjects/EditSubject.vue";
+import ViewImage from "@/components/Subjects/ViewImage";
+
 
 const defaultLabels = {
   first: '>>',
@@ -92,10 +106,14 @@ export default {
       search:{
         name_subject:'',
         id_item:'',
-      }
+      },
+      title_print:'جميع المواد',
+
     }
   },
   components:{
+    ViewImage,
+
     EditSubject,
     AddSubject,
     JwPagination,
@@ -107,15 +125,22 @@ export default {
     },
     search_subject()
     {
+
       var res = this.$store.state.subjects.subjects;
       res = res.filter(item=>item.name_subject.toLowerCase().match(this.search.name_subject.toLowerCase()));
       if(this.search.id_item != null && this.search.id_item != "" && this.search.id_item != undefined && this.search.id_item > 0)
       {
         res = res.filter(item=>item.id_fk_item==this.search.id_item);
+        if (this.search.id_item != null)
+        {
+            this.title_print = res[0].name_item;
+        }
       }
 
 
-      this.subjects = res;
+
+      this.subjects = res.sort((a, b) => (a.name_subject > b.name_subject ? 1 : -1));
+      this.search.id_item = null;
     },
     set_to_edit(target)
     {
@@ -123,7 +148,12 @@ export default {
       this.$store.state.subjects.forms.edit_subject = true;
     }
     ,
+    set_to_view_image(target)
+    {
 
+      this.$store.state.subjects.target = target ;
+      this.$store.state.subjects.forms.view_image = true;
+    },
     delete_target(target)
     {
       this.$confirm("هل انت متأكد من الحذف ؟").then(() => {
@@ -149,6 +179,21 @@ export default {
           this.$store.state.loading = false;
         })
       });
+    },
+    print() {
+
+      //console.log(this.subjects)
+      this.$store.state.drawer =false;
+
+        this.$store.state.items.title_print = this.title_print;
+
+
+      this.$store.state.items.reports =this.subjects;
+
+      this.$router.push({
+        // path:'/print-items-report/'+this.minimum,
+        path:'/print-items-report',
+      });
     }
   },
   created() {
@@ -164,7 +209,7 @@ export default {
   },
   watch:{
     get_subjects2(new_subjects){
-      this.subjects = new_subjects;
+      this.subjects = new_subjects
     }
   },
 };

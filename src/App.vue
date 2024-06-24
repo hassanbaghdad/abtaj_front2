@@ -42,8 +42,8 @@ export default Vue.extend({
   created() {
 
     this.$store.state.drawer = false;
-    this.$store.commit("GET_ITEMS");
-    this.$store.commit("GET_UNITS");
+    //this.$store.commit("GET_ITEMS");
+    this.$store.commit("RENDER");
   }
 });
 </script>

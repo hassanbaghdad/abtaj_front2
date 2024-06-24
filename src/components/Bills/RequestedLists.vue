@@ -8,6 +8,7 @@
       <v-divider/>
       <v-card-title v-if="$vuetify.breakpoint.xs">
         <v-text-field label="اسم المحرر" outlined dense v-model="search.name" @keyup="search_req" prepend-inner-icon="mdi-magnify"/>
+        <v-text-field label="الى" outlined dense  prepend-inner-icon="mdi-magnify"/>
         <v-text-field label="تاريخ الطلب" outlined dense v-model="search.created_at" @keyup="search_req" prepend-inner-icon="mdi-magnify"/>
         <v-text-field label="عدد الانواع" outlined dense v-model="search.count_items" @keyup="search_req" prepend-inner-icon="mdi-magnify"/>
         <v-text-field label="حالة الطلب" outlined dense v-model="search.list_state" @keyup="search_req" prepend-inner-icon="mdi-magnify"/>
@@ -19,7 +20,9 @@
             <thead>
             <tr>
               <th class="text-center">ت</th>
+              <th class="text-center">الى</th>
               <th class="text-center">المحرر</th>
+
               <th class="text-center">التاريخ</th>
               <th class="text-center">عدد النوع</th>
               <th class="text-center">الحالة</th>
@@ -29,6 +32,7 @@
               <th class="text-center">حذف</th>
             </tr>
             <tr v-if="!$vuetify.breakpoint.xs">
+              <th class="text-center"></th>
               <th class="text-center"></th>
               <th class="text-center"><v-text-field outlined dense v-model="search.name" @keyup="search_req" prepend-inner-icon="mdi-magnify"/> </th>
               <th class="text-center"><v-text-field outlined dense v-model="search.created_at" @keyup="search_req" prepend-inner-icon="mdi-magnify"/> </th>
@@ -43,6 +47,7 @@
             <tbody>
             <tr v-for="(req , i) in requests" :key="'req_i_'+i">
               <td class="text-center">{{requests.indexOf(req)+1}}</td>
+              <td class="text-center">{{req.to}}</td>
               <td class="text-center">{{req.name}}</td>
               <td class="text-center">{{req.created_at.substring(0,10)}}</td>
               <td class="text-center">{{req.count_items}}</td>
@@ -103,6 +108,10 @@ export default {
       this.loading = true;
 
       this.$axios.get('/api/lists/get-requests').then(res=>{
+        res.data.map(x=>{
+          x.to = this.$store.state.branches.branches.filter(item=>item.id == x.branche_id_fk)[0].title;
+          return x;
+        });
         this.requests = res.data;
         this.requests_copy = res.data;
       }).catch(err=>{

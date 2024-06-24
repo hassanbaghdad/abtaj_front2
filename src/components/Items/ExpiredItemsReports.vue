@@ -146,7 +146,7 @@ export default {
         });
 
         this.items_f = filtered;
-        this.$store.state.items.reports = filtered;
+        this.$store.state.items.reports = filtered.sort((a, b) => (a.name_subject > b.name_subject ? 1 : -1));;
       }).catch(err=>{
         console.log(err)
       }).finally(fin=>{
@@ -168,7 +168,7 @@ export default {
         this.$store.state.items.id_item = this.search.id_item;
       }
 
-      this.subjects = res;
+      this.subjects = res.sort((a, b) => (a.name_subject > b.name_subject ? 1 : -1));;
     },
     get_report(mini)
     {

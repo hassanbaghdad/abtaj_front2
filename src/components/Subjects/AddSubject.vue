@@ -12,6 +12,8 @@
       <v-select :rules="req" label="الفئة" :items="$store.state.items.items" outlined v-model="subject.id_fk_item" item-value="id" item-text="name_item"/>
       <v-select :rules="req" label="الوحدة" :items="$store.state.units.units" outlined v-model="subject.id_fk_unit" item-value="id" item-text="name_unit"/>
       <v-text-field v-model="subject.count" :rules="req_no" outlined prepend-inner-icon="mdi-information" label="الكمية"/>
+      <v-file-input v-model="subject.selectedFile" label="Choose file" @change="uploadImage"></v-file-input>
+      <v-img v-if="subject.imageUrl" :src="subject.imageUrl" height="200"></v-img>
 
     </v-card-text>
     <v-divider/>
@@ -39,12 +41,14 @@ export default {
     return{
       valid:true,
       req:[v=>!!v || 'لايمكن تركه فارغاً'],
-     req_no:[v=>!!v&&Number(v) || 'يجب ادخال رقم'],
+     req_no:[v=>!!v&&Number(v) > -1 || 'يجب ادخال رقم'],
       subject:{
         name_subject:'',
         id_fk_item:'',
         id_fk_unit:'',
         count:'',
+        selectedFile: null,
+        imageUrl: null,
 
 
       }
@@ -56,7 +60,15 @@ export default {
       if(this.$refs.form.validate())
       {
         this.$store.state.loading = true;
-        this.$axios.post('api/subjects/add-subject',this.subject).then(res=>{
+        var fd = new FormData();
+
+        fd.append('name_subject',this.subject.name_subject);
+        fd.append('id_fk_item',this.subject.id_fk_item);
+        fd.append('id_fk_unit',this.subject.id_fk_unit);
+        fd.append('count',this.subject.count);
+        fd.append('selectedFile',this.subject.selectedFile);
+
+        this.$axios.post('api/subjects/add-subject',fd).then(res=>{
           this.$store.commit("GET_SUBJECTS",0);
           this.$fire({
             title: "نجح",
@@ -68,6 +80,8 @@ export default {
           this.subject.id_fk_item = '';
           this.subject.id_fk_unit = '';
           this.subject.count = '';
+          this.subject.selectedFile = '';
+          this.subject.imageUrl = '';
           this.$store.state.subjects.forms.add_subject = false;
 
         }).catch(err=>{
@@ -82,7 +96,17 @@ export default {
         })
       }
 
-    }
+    },
+    uploadImage() {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        this.subject.imageUrl = event.target.result;
+      };
+      if (this.subject.selectedFile) {
+        reader.readAsDataURL(this.subject.selectedFile);
+      }
+    },
   }
 };
 </script>

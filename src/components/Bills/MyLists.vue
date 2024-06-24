@@ -12,6 +12,7 @@
             <thead>
             <tr>
               <th class="text-center">ت</th>
+              <th class="text-center">الى</th>
               <th class="text-center">عدد المواد</th>
               <th class="text-center">تاريخ الطلب</th>
               <th class="text-center">الحالة</th>
@@ -23,6 +24,7 @@
             <tr  v-for="(item ,i) in lists" :key="'list_i_'+i">
 
               <td class="text-center">{{lists.indexOf(item)+1}}</td>
+              <td class="text-center">{{item.to}}</td>
               <td class="text-center">{{item.count_items}}</td>
               <td class="text-center">{{item.created_at.substring(0,10)}}</td>
               <td class="text-center">
@@ -67,7 +69,8 @@ export default {
         return "تم القبول";
       }
 
-    }
+    },
+
   },
   data(){
     return{
@@ -81,6 +84,10 @@ export default {
       this.loading = true;
       this.$axios.post('/api/lists/get-mylists',{list_state:0}).then(res=>{
         this.lists = res.data;
+        res.data.map(x=>{
+          x.to = this.$store.state.branches.branches.filter(item=>item.id == x.branche_id_fk)[0].title;
+          return x;
+        });
       }).catch(err=>{
         console.log(err)
       }).finally(fin=>{

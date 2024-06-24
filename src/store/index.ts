@@ -26,6 +26,7 @@ export default new Vuex.Store({
         edit_subject:false,
         delete_subject:false,
         view_list_items:false,
+        view_image:false
       },
       list_target:[],
       list_items:[]
@@ -61,6 +62,9 @@ export default new Vuex.Store({
         delete:false
       }
     },
+    branches:{
+      branches:[]
+    },
     users:{
       users:[],
       target:[],
@@ -74,6 +78,25 @@ export default new Vuex.Store({
   },
   getters: {},
   mutations: {
+    async RENDER(state){
+
+      state.loading = true;
+      await axios.get('api/render').then(res=>{
+
+        state.items.items = res.data.items ;
+        state.units.units = res.data.units ;
+        state.branches.branches = res.data.branches ;
+      }).catch(err=>{
+        if(err.response.status ==401)
+        {
+          state.user.login=false;
+          state.loading = false;
+          router.push('/login').catch(error=>{});
+        }
+      }).finally(function() {
+        state.loading = false;
+      })
+    },
     async GET_ITEMS(state){
       state.items.items = [];
       state.loading = true;
